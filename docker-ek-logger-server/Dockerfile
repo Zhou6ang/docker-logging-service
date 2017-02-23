@@ -50,7 +50,8 @@ RUN set -x \
 	&& sed -i 's/^#elasticsearch\.url:.*$/elasticsearch.url: "http:\/\/0.0.0.0:9200"/' /kibana/config/kibana.yml \
 	&& grep -x "elasticsearch.url: \"http://0.0.0.0:9200\"" /kibana/config/kibana.yml \
 	&& sed -i 's/^NODE=".*$/NODE="\/usr\/bin\/node"/' /kibana/bin/kibana* \
-	&& grep -x "NODE=\"/usr/bin/node\"" /kibana/bin/kibana*
+	&& grep -x "NODE=\"/usr/bin/node\"" /kibana/bin/kibana* \
+	&& rm /kibana-$KIBANA_VERSION.tar.gz /elasticsearch-$ES_VERSION.tar.gz
 
 #initial startup.
 RUN { \
