@@ -1,7 +1,7 @@
 FROM alpine:3.5
 ENV LANG C.UTF-8
-ENV http_proxy http://87.254.212.121:8080/
-ENV https_proxy http://87.254.212.121:8080/
+#ENV http_proxy http://87.254.212.121:8080/
+#ENV https_proxy http://87.254.212.121:8080/
 ENV ES_VERSION 5.2.1
 ENV KIBANA_VERSION 5.2.1
 
@@ -25,11 +25,19 @@ RUN set -x \
 	&& apk update \
 	&& apk add --no-cache nodejs curl
 
+#RUN set -x \
+#	&& curl --proxy1.0 $http_proxy -sSL https://artifacts.elastic.co/downloads/elasticsearch/elasticsearch-$ES_VERSION.tar.gz > /elasticsearch-$ES_VERSION.tar.gz \
+#	&& tar -xzf /elasticsearch-$ES_VERSION.tar.gz \
+#	&& mv /elasticsearch-$ES_VERSION /elasticsearch \
+#	&& curl --proxy1.0 $http_proxy -sSL https://artifacts.elastic.co/downloads/kibana/kibana-$KIBANA_VERSION-linux-x86_64.tar.gz > /kibana-$KIBANA_VERSION.tar.gz \
+#	&& tar -xzf /kibana-$KIBANA_VERSION.tar.gz \
+#	&& mv /kibana-$KIBANA_VERSION-linux-x86_64 /kibana
+
 RUN set -x \
-	&& curl --proxy1.0 $http_proxy -sSL https://artifacts.elastic.co/downloads/elasticsearch/elasticsearch-$ES_VERSION.tar.gz > /elasticsearch-$ES_VERSION.tar.gz \
+	&& curl -sSL https://artifacts.elastic.co/downloads/elasticsearch/elasticsearch-$ES_VERSION.tar.gz > /elasticsearch-$ES_VERSION.tar.gz \
 	&& tar -xzf /elasticsearch-$ES_VERSION.tar.gz \
 	&& mv /elasticsearch-$ES_VERSION /elasticsearch \
-	&& curl --proxy1.0 $http_proxy -sSL https://artifacts.elastic.co/downloads/kibana/kibana-$KIBANA_VERSION-linux-x86_64.tar.gz > /kibana-$KIBANA_VERSION.tar.gz \
+	&& curl -sSL https://artifacts.elastic.co/downloads/kibana/kibana-$KIBANA_VERSION-linux-x86_64.tar.gz > /kibana-$KIBANA_VERSION.tar.gz \
 	&& tar -xzf /kibana-$KIBANA_VERSION.tar.gz \
 	&& mv /kibana-$KIBANA_VERSION-linux-x86_64 /kibana
 
