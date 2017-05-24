@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Configuration status="WARN" monitorInterval="30" packages="com.nokia.oss.logging">
+  <Properties>
+    <Property name="filename">target/app.log</Property>
+    <Property name="logfolder">target/logs</Property>
+  </Properties>
+  <Appenders>
+    <Console name="Console" target="SYSTEM_OUT">
+      <PatternLayout pattern="%d{yyyy-MM-dd'T'HH:mm:ss.SSS} [%t] |%-5level| %logger{36} - %msg%n"/>
+    </Console>
+    <File name="File" fileName="${filename}">
+      <PatternLayout>
+        <pattern>%d{yyyy-MM-dd'T'HH:mm:ss.SSS} [%t] |%-5level| %logger{36} - %msg%n</pattern>
+      </PatternLayout>
+    </File>
+    <!-- filePattern supported with ".gz", ".zip", ".bz2", ".deflate", ".pack200", or ".xz"  -->
+    <RollingRandomAccessFile name="RollingRandomAccessFile" fileName="${logfolder}/app.log"
+                 filePattern="${logfolder}/$${date:yyyy-MM}/app-%d{yyyy-MM-dd-HH}-%i.log.gz">
+       <PatternLayout pattern="%d{yyyy-MM-dd'T'HH:mm:ss.SSS} [%t] |%-5level| %logger{36} - %msg%n"/>
+       <Policies>
+       <!-- <TimeBasedTriggeringPolicy interval="8"  modulate="true"/> make shard file each 8-hours,e.g. "7","15","23" o'clock-->
+        <TimeBasedTriggeringPolicy/>
+        <!-- size support KB,MB,GB -->
+        <SizeBasedTriggeringPolicy size="2 MB"/>
+      </Policies>
+      <!-- <DefaultRolloverStrategy max="xx" min="1" fileIndex="min" compressionLevel="0-9"/> -->
+      <DefaultRolloverStrategy max="5" fileIndex="min"/>
+    </RollingRandomAccessFile>
+	
+	<!--
+	url="http://ES_HOST:PORT/PROJECT_INDEX/PROJECT_TYPE/PROJECT_ID",
+	disabled="true" means disable transfering log to remote server and using standard in/out. default is false.
+	e.g. <OSSLogger name="mylogger" url="http://10.91.151.87:9200/da/api" disabled="true"/>
+	-->
+	<OSSLogger name="mylogger" url="http://10.91.151.87:9200/da/api" disabled="true"/>
+	
+  </Appenders>
+  <Loggers>
+    <Logger name="com" level="debug" additivity="false">
+     <AppenderRef ref="RollingRandomAccessFile"/>
+     <!-- <AppenderRef ref="Console"/>    -->
+     <AppenderRef ref="mylogger"/>
+    </Logger>
+    <!-- set additivity="true" and it will be recorded by Root even Logger "com.zz" already recorded. if set "false", the content that Logger "com.zz" already record will not be recorded by Root. 
+    <Logger name="com.zz" level="trace" additivity="false">
+        <AppenderRef ref="RollingRandomAccessFile"/>
+    </Logger>-->
+    <Root level="info">
+      <AppenderRef ref="Console"/>   
+      <AppenderRef ref="mylogger"/>  
+      <AppenderRef ref="File"/>  
+      
+    </Root>
+  </Loggers>
+</Configuration>
